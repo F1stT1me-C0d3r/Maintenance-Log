@@ -4,10 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=menu" />
   <script src="script.js" defer></script>
   <title>Document</title>
 </head>
 <body>
+  <nav class="navbar">
+    <ul>      
+      <li><a href="entries.html"><span class="material-symbols-outlined">menu</span></a></li>
+    </ul>
+  </nav>
+  <div class="container">
+    <h1>Vehicle Maintenance Tracker</h1>
+    <div class="input-section">
+      <input type="text" id="maintenanceMessage" placeholder="Make, Model, Year" />
+      <button id="filterButton">Filter</button>
+      <button id="clearButton">Clear</button>
+    </div>
 
+    <ul id="resultsList"></ul>
+  </div>
 </body>
 </html>

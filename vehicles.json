@@ -1,0 +1,215 @@
+{
+    "make": [
+        {
+            "Toyota": [
+                {
+                    "id": 1,
+                    "models": [
+                        {
+                            "name": "Camry",
+                            "year": 2015,
+                            "plateNumber": "B9D945",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Tacoma",
+                            "year": 2019,
+                            "plateNumber": "894 ZMR",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "C-HR",
+                            "year": 2018,
+                            "plateNumber": "762 XCH",
+                            "imageUrl": "https://placehold.co/600x400"
+                        }
+                    ]
+                }
+            ],
+            "Kia": [
+                {
+                    "id": 2,
+                    "models": [
+                        {
+                            "name": "Carnival",
+                            "year": 2024,
+                            "plateNumber": "G8N436",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Carnival",
+                            "year": 2025,
+                            "plateNumber": "R3V052",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Carnival",
+                            "year": 2026,
+                            "plateNumber": "N8X378",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Carnival",
+                            "year": 2026,
+                            "plateNumber": "S4V435",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Sportage",
+                            "year": 2020,
+                            "plateNumber": "V8G471",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Sportage",
+                            "year": 2021,
+                            "plateNumber": "BTL 743",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Sportage",
+                            "year": 2022,
+                            "plateNumber": "BWG944",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Sportage",
+                            "year": 2026,
+                            "plateNumber": "E308455",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Sportage",
+                            "year": 2026,
+                            "plateNumber": "E308487",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Sportage",
+                            "year": 2026,
+                            "plateNumber": "E308492",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Sportage",
+                            "year": 2026,
+                            "plateNumber": "E308809",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Forte",
+                            "year": 2022,
+                            "plateNumber": "L6M500",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Forte",
+                            "year": 2023,
+                            "plateNumber": "D6X921",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Forte",
+                            "year": 2023,
+                            "plateNumber": "D7Y210",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Sedona",
+                            "year": 2016,
+                            "plateNumber": "301VWG",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Soul",
+                            "year": 2025,
+                            "plateNumber": "S3M199",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "K4",
+                            "year": 2025,
+                            "plateNumber": "E368831",
+                            "imageUrl": "https://placehold.co/600x400"
+                        }
+                    ]
+                }
+            ],
+            "Ford": [
+                {
+                    "id": 3,
+                    "models": [
+                        {
+                            "name": "Ecosport",
+                            "year": "2020",
+                            "plateNumber": "BYK575",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Ecosport",
+                            "year": "2020",
+                            "plateNumber": "BZG928",
+                            "imageUrl": "https://placehold.co/600x400"
+                        }
+                    ]
+                }
+            ],
+            "Hyundai": [
+                {
+                    "id": 4,
+                    "models": [
+                        {
+                            "name": "Venue",
+                            "year": 2022,
+                            "plateNumber": "D7N811",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Tucson",
+                            "year": 2026,
+                            "plateNumber": "V8N141",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Tucson",
+                            "year": 2026,
+                            "plateNumber": "W2H440",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Tucson",
+                            "year": 2026,
+                            "plateNumber": "W2K353",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Tucson",
+                            "year": 2022,
+                            "plateNumber": "C5Z872",
+                            "imageUrl": "https://placehold.co/600x400"
+                        },
+                        {
+                            "name": "Tucson",
+                            "year": 2022,
+                            "plateNumber": "D1B743",
+                            "imageUrl": "https://placehold.co/600x400"
+                        }
+                    ]
+                }
+            ],
+            "Mazda": [
+                {
+                    "id": 5,
+                    "models": [
+                        {
+                            "name": "Cx-30",
+                            "year": 2026,
+                            "plateNumber": "W6P228",
+                            "imageUrl": "https://placehold.co/600x400"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
