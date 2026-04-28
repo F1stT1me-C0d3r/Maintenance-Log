@@ -2,6 +2,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const filterButton = document.getElementById('filterButton');
   const clearButton = document.getElementById('clearButton');
   const resultsList = document.getElementById('resultsList');
+  const modal = document.createElement('dialog');
+
+        modal.id = 'updateModal';
+        modal.innerHTML = `
+        <form id="updateForm" method="dialog" class="modal-content">
+            <h3 id="modalTitle">
+            </h3>
+            <label for="maintenanceType">Maintenance item:</label>
+                <input type="text" id="maintenanceType" name="maintenanceType" list="maintenanceOptions" placeholder="Select or type a maintenance item" required />
+                    <datalist id="maintenanceOptions">
+                        <option value="Air Filter Change">
+                        <option value="Battery Replacement">
+                        <option value="Belt Replacement">
+                        <option value="Brake Pad Replacement">
+                        <option value="Bulb Replacement">
+                        <option value="Engine Coolant Flush">
+                        <option value="Fuel Filter Change">
+                        <option value="Hose Replacement">
+                        <option value="Oil & Filter Change">
+                        <option value="Tire Alignment">
+                        <option value="Tire Repair / Replacement">
+                        <option value="Tire Rotation / Balance">
+                        <option value="Transmission Fluid Change">
+                        <option value="Windshield Wiper Replacement">
+                    </datalist>
+                <label for="maintenanceCost">Cost ($):</label>
+            <input type="number" id="maintenanceCost" name="maintenanceCost" placeholder="0.00" min="0" step="0.01" required />
+            <div class="modal-buttons">
+                <button type="submit">Submit</button>
+                <button type="button" id="cancelModalBtn">Cancel</button>
+            </div>
+        </form>`;
+        document.body.appendChild(modal);
+        modal.querySelector('#cancelModalBtn').addEventListener('click', () => modal.close());
+
   
 
   let carData = { make: []};
@@ -54,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <li class="vehicle-item">
                         <img src="${model.imageUrl}" class="vehicle-image" />
                         <p>${makeEntry.make} ${model.name} (${model.year}) - License Plate # ${model.plate}</p>
-                        <button class="update-button" id="updateBtn">Update</button>
+                         <button class="update-button" data-make="${makeEntry.make}" data-model="${model.name}" data-year="${model.year}" data-plate="${model.plate}">Update</button>
                     </li>`);
                 });
             });
@@ -90,8 +125,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('maintenanceMessage').value = '';
         displayVehicles(); // Display all vehicles when clearing the filter
     });
-    
 
-        
+    resultsList.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('update-button')) return;
+        const { make, model, year, plate } = e.target.dataset;
+        document.getElementById('modalTitle').textContent =
+            `${make} ${model} (${year}) — Plate # ${plate}`;
+        document.getElementById('maintenanceType').value = '';
+        document.getElementById('maintenanceCost').value = '';
+        modal.showModal();
+    });
 
+   
 });
