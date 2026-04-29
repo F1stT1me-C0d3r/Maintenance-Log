@@ -7,10 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.id = 'updateModal';
         modal.innerHTML = `
         <form id="updateForm" method="dialog" class="modal-content">
-            <h3 id="modalTitle">
-            </h3>
-            <label for="maintenanceType">Maintenance item:</label>
-                <input type="text" id="maintenanceType" name="maintenanceType" list="maintenanceOptions" placeholder="Select or type a maintenance item" required />
+            <h3 id="modalTitle"></h3>
+            <div id="maintenanceItems">
+                <div class="maintenance-row">
+                    <label>Maintenance item:</label>
+                    <input type="text" id="maintenanceType" name="maintenanceType" list="maintenanceOptions" placeholder="Select or type a maintenance item" required />
                     <datalist id="maintenanceOptions">
                         <option value="Air Filter Change">
                         <option value="Battery Replacement">
@@ -27,15 +28,99 @@ document.addEventListener('DOMContentLoaded', () => {
                         <option value="Transmission Fluid Change">
                         <option value="Windshield Wiper Replacement">
                     </datalist>
-                <label for="maintenanceCost">Cost ($):</label>
-            <input type="number" id="maintenanceCost" name="maintenanceCost" placeholder="0.00" min="0" step="0.01" required />
+                    <label>Cost ($):</label>
+                    <input type="number" id="maintenanceCost" name="maintenanceCost" class="cost-input" placeholder="0.00" min="0" step="0.01" required />
+                </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+                <button type="button" id="addItemBtn">+ Add Another Item</button>
+                <div class="modal-total">
+                    <label>Total Cost:</label>
+                    <span id="totalCost">$0.00</span>
+                </div>
+            </div>
             <div class="modal-buttons">
                 <button type="submit">Submit</button>
                 <button type="button" id="cancelModalBtn">Cancel</button>
             </div>
         </form>`;
         document.body.appendChild(modal);
-        modal.querySelector('#cancelModalBtn').addEventListener('click', () => modal.close());
+
+        if (typeof modal.showModal !== 'function') {
+          console.error('HTMLDialogElement not supported in this browser.');
+        }
+
+        const cancelBtn = modal.querySelector('#cancelModalBtn');
+        if (!cancelBtn) {
+          console.error('Modal failed to render: #cancelModalBtn not found');
+        } else {
+          cancelBtn.addEventListener('click', () => modal.close());
+        }
+
+        const updateTotal = () => {
+          const total = Array.from(modal.querySelectorAll('.cost-input'))
+            .reduce((sum, input) => sum + (parseFloat(input.value) || 0), 0);
+          const totalEl = modal.querySelector('#totalCost');
+          if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+        };
+
+        modal.querySelector('#updateForm').addEventListener('input', updateTotal);
+
+        const notification = document.createElement('div');
+        notification.textContent = 'Maintenance list updated';
+        notification.className = 'maintenance-notification';
+        notification.style.cssText = 'display:none; position:fixed; bottom:24px; right:24px; background:#2e7d32; color:#fff; padding:10px 18px; border-radius:6px; font-weight:500; z-index:9999;';
+        document.body.appendChild(notification);
+
+        modal.querySelector('#updateForm').addEventListener('submit', () => {
+          const items = Array.from(modal.querySelectorAll('.maintenance-row')).map(row => ({
+            type: (row.querySelector('input[type="text"]') || {}).value || '',
+            cost: parseFloat((row.querySelector('.cost-input') || {}).value) || 0
+          })).filter(item => item.type);
+
+          const entry = {
+            make: modal.dataset.entryMake,
+            model: modal.dataset.entryModel,
+            year: modal.dataset.entryYear,
+            plate: modal.dataset.entryPlate,
+            imageUrl: modal.dataset.entryImage,
+            items,
+            total: (modal.querySelector('#totalCost') || {}).textContent || '$0.00',
+            date: new Date().toLocaleDateString()
+          };
+
+          const log = JSON.parse(localStorage.getItem('maintenanceLog') || '[]');
+          log.unshift(entry);
+          localStorage.setItem('maintenanceLog', JSON.stringify(log));
+
+          notification.style.display = 'block';
+          setTimeout(() => { notification.style.display = 'none'; }, 3000);
+        });
+
+        const addItemBtn = modal.querySelector('#addItemBtn');
+        if (!addItemBtn) {
+          console.error('Modal failed to render: #addItemBtn not found');
+        } else {
+          addItemBtn.addEventListener('click', () => {
+            const items = modal.querySelector('#maintenanceItems');
+            const firstRow = items.querySelector('.maintenance-row');
+            const newRow = firstRow.cloneNode(true);
+            newRow.querySelectorAll('input').forEach(input => {
+              input.value = '';
+              input.removeAttribute('id');
+              input.removeAttribute('required');
+            });
+            const clonedDatalist = newRow.querySelector('datalist');
+            if (clonedDatalist) clonedDatalist.remove();
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.textContent = '✕';
+            removeBtn.className = 'remove-item-btn';
+            removeBtn.addEventListener('click', () => { newRow.remove(); updateTotal(); });
+            newRow.appendChild(removeBtn);
+            items.appendChild(newRow);
+          });
+        }
 
   
 
@@ -89,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <li class="vehicle-item">
                         <img src="${model.imageUrl}" class="vehicle-image" />
                         <p>${makeEntry.make} ${model.name} (${model.year}) - License Plate # ${model.plate}</p>
-                         <button class="update-button" data-make="${makeEntry.make}" data-model="${model.name}" data-year="${model.year}" data-plate="${model.plate}">Update</button>
+                         <button class="update-button" data-make="${makeEntry.make}" data-model="${model.name}" data-year="${model.year}" data-plate="${model.plate}" data-image="${model.imageUrl}">Update</button>
                     </li>`);
                 });
             });
@@ -103,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const input = document.getElementById('maintenanceMessage').value.trim().toLowerCase();
             if (!input) {
-            resultsList.innerHTML = '<p class="error">Please enter a make, model, or year to filter.</p>';
+            resultsList.innerHTML = '<p class="error">Please enter a make, model, year, or plate # to filter.</p>';
             return;
             }            
             const filteredMakes = carData.make.filter(makeEntry => {
@@ -128,12 +213,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resultsList.addEventListener('click', (e) => {
         if (!e.target.classList.contains('update-button')) return;
-        const { make, model, year, plate } = e.target.dataset;
+        const { make, model, year, plate, image } = e.target.dataset;
         document.getElementById('modalTitle').textContent =
             `${make} ${model} (${year}) — Plate # ${plate}`;
         document.getElementById('maintenanceType').value = '';
         document.getElementById('maintenanceCost').value = '';
-        modal.showModal();
+        modal.dataset.entryMake = make;
+        modal.dataset.entryModel = model;
+        modal.dataset.entryYear = year;
+        modal.dataset.entryPlate = plate;
+        modal.dataset.entryImage = image;
+        Array.from(modal.querySelector('#maintenanceItems').querySelectorAll('.maintenance-row')).slice(1).forEach(row => row.remove());
+        const totalEl = modal.querySelector('#totalCost');
+        if (totalEl) totalEl.textContent = '$0.00';
+        try {
+          modal.showModal();
+        } catch (err) {
+          console.error('Failed to open modal:', err);
+        }
     });
 
    
