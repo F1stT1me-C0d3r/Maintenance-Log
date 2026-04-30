@@ -25,4 +25,4 @@ app.put('/api/log', (req, res) => {
   res.json({ ok: true });
 });
 
-app.listen(5500, '0.0.0.0', () => console.log('Server running at http://0.0.0.0:5500'));
+app.listen(3000, '0.0.0.0', () => console.log('Server running at http://0.0.0.0:3000'));
