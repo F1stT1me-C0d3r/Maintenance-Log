@@ -39,6 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span id="totalCost">$0.00</span>
                 </div>
             </div>
+            <div style="margin-top:8px;">
+                <label>Logged by:</label>
+                <input type="text" id="loggedBy" name="loggedBy" placeholder="Your name" />
+            </div>
             <div class="modal-buttons">
                 <button type="submit">Submit</button>
                 <button type="button" id="cancelModalBtn">Cancel</button>
@@ -84,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             year: modal.dataset.entryYear,
             plate: modal.dataset.entryPlate,
             imageUrl: modal.dataset.entryImage,
+            loggedBy: (modal.querySelector('#loggedBy') || {}).value?.trim() || '',
             items,
             total: (modal.querySelector('#totalCost') || {}).textContent || '$0.00',
             date: new Date().toLocaleDateString()
@@ -228,6 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
         Array.from(modal.querySelector('#maintenanceItems').querySelectorAll('.maintenance-row')).slice(1).forEach(row => row.remove());
         const totalEl = modal.querySelector('#totalCost');
         if (totalEl) totalEl.textContent = '$0.00';
+        const loggedByInput = modal.querySelector('#loggedBy');
+        if (loggedByInput) loggedByInput.value = '';
         try {
           modal.showModal();
         } catch (err) {
