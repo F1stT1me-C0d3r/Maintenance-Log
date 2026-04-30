@@ -89,9 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
             date: new Date().toLocaleDateString()
           };
 
-          const log = JSON.parse(localStorage.getItem('maintenanceLog') || '[]');
-          log.unshift(entry);
-          localStorage.setItem('maintenanceLog', JSON.stringify(log));
+          fetch('/api/log', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(entry)
+          });
 
           notification.style.display = 'block';
           setTimeout(() => { notification.style.display = 'none'; }, 3000);

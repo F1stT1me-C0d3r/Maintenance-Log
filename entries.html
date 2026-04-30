@@ -11,7 +11,7 @@
 <body>
   <nav class="navbar">
     <ul>
-      <li><a href="body.html"><span class="material-symbols-outlined">home</span></a></li>
+      <li><a href="index.html"><span class="material-symbols-outlined">home</span></a></li>
     </ul>
   </nav>
 
@@ -27,9 +27,10 @@
   </section>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const list = document.getElementById('entriesList');
-      let log = JSON.parse(localStorage.getItem('maintenanceLog') || '[]');
+      const res = await fetch('/api/log');
+      let log = await res.json();
 
       const getWeekBounds = (dateStr) => {
         const d = new Date(dateStr);
@@ -86,12 +87,16 @@
 
       render();
 
-      document.getElementById('removeSelectedBtn').addEventListener('click', () => {
+      document.getElementById('removeSelectedBtn').addEventListener('click', async () => {
         const checked = Array.from(list.querySelectorAll('.entry-checkbox:checked'))
           .map(cb => parseInt(cb.dataset.index));
         if (!checked.length) return;
         log = log.filter((_, i) => !checked.includes(i));
-        localStorage.setItem('maintenanceLog', JSON.stringify(log));
+        await fetch('/api/log', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(log)
+        });
         render();
       });
 
