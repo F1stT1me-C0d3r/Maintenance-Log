@@ -1,40 +1,48 @@
-const express  = require('express');
-const path     = require('path');
-const Database = require('better-sqlite3');
+const express = require('express');
+const { Pool } = require('pg');
 
 const app = express();
-const db  = new Database(path.join(__dirname, 'logs', 'log.db'));
+const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
 
-db.exec(`
-  CREATE TABLE IF NOT EXISTS entries (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    data       TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`);
+async function init() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS entries (
+      id         SERIAL PRIMARY KEY,
+      data       TEXT NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+}
 
 app.use(express.json());
 app.use(express.static(__dirname));
 
-app.get('/api/log', (req, res) => {
-  const rows = db.prepare('SELECT data FROM entries ORDER BY created_at DESC').all();
+app.get('/api/log', async (req, res) => {
+  const { rows } = await pool.query('SELECT data FROM entries ORDER BY created_at DESC');
   res.json(rows.map(r => JSON.parse(r.data)));
 });
 
-app.post('/api/log', (req, res) => {
-  db.prepare('INSERT INTO entries (data) VALUES (?)').run(JSON.stringify(req.body));
+app.post('/api/log', async (req, res) => {
+  await pool.query('INSERT INTO entries (data) VALUES ($1)', [JSON.stringify(req.body)]);
   res.json({ ok: true });
 });
 
-app.put('/api/log', (req, res) => {
-  const deleteAll  = db.prepare('DELETE FROM entries');
-  const insertOne  = db.prepare('INSERT INTO entries (data) VALUES (?)');
-  const replaceAll = db.transaction((entries) => {
-    deleteAll.run();
-    entries.forEach(entry => insertOne.run(JSON.stringify(entry)));
-  });
-  replaceAll(req.body);
-  res.json({ ok: true });
+app.put('/api/log', async (req, res) => {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query('DELETE FROM entries');
+    for (const entry of req.body) {
+      await client.query('INSERT INTO entries (data) VALUES ($1)', [JSON.stringify(entry)]);
+    }
+    await client.query('COMMIT');
+    res.json({ ok: true });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
 });
 
-app.listen(3000, '0.0.0.0', () => console.log('Server running at http://0.0.0.0:3000'));
+init().then(() => app.listen(process.env.PORT || 3000, () => console.log('Server ready')));

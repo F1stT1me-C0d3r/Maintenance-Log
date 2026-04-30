@@ -1,5 +1,0 @@
-User: F1stT1me-C0d3r
-
-URL: https://github.com/F1stT1me-C0d3r/Maintenance-Log
-
-Personal Access Tokens: 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
