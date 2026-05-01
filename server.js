@@ -1,6 +1,11 @@
 const express = require('express');
 const { Pool } = require('pg');
 
+if (!process.env.DATABASE_URL) {
+  console.error('ERROR: DATABASE_URL is not set. Link the PostgreSQL plugin to this service in Railway.');
+  process.exit(1);
+}
+
 const app = express();
 const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
 
