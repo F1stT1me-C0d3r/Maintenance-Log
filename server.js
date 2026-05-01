@@ -17,14 +17,18 @@ async function init() {
 app.use(express.json());
 app.use(express.static(__dirname));
 
-app.get('/api/log', async (req, res) => {
-  const { rows } = await pool.query('SELECT data FROM entries ORDER BY created_at DESC');
-  res.json(rows.map(r => JSON.parse(r.data)));
+app.get('/api/log', async (req, res, next) => {
+  try {
+    const { rows } = await pool.query('SELECT data FROM entries ORDER BY created_at DESC');
+    res.json(rows.map(r => JSON.parse(r.data)));
+  } catch (err) { next(err); }
 });
 
-app.post('/api/log', async (req, res) => {
-  await pool.query('INSERT INTO entries (data) VALUES ($1)', [JSON.stringify(req.body)]);
-  res.json({ ok: true });
+app.post('/api/log', async (req, res, next) => {
+  try {
+    await pool.query('INSERT INTO entries (data) VALUES ($1)', [JSON.stringify(req.body)]);
+    res.json({ ok: true });
+  } catch (err) { next(err); }
 });
 
 app.put('/api/log', async (req, res) => {
