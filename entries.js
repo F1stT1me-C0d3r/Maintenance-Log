@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           ${entry.loggedBy ? `<span class="entry-logged-by">Logged by: ${entry.loggedBy}</span>` : ''}
           <ul class="entry-items">
             ${entry.items.map(item => `<li>${item.type} — $${item.cost.toFixed(2)}</li>`).join('')}
-            ${entry.discount ? `<li>Discount — -$${parseFloat(entry.discount).toFixed(2)}</li>` : ''}
+            ${entry.discountTotal ? `<li>Discount — -$${parseFloat(entry.discountTotal).toFixed(2)}</li>` : ''}
           </ul>
           <span class="entry-total">Total: ${entry.total}</span>
         `;
