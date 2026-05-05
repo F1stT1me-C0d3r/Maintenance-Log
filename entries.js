@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           `      Date: ${entry.date}`,
           entry.loggedBy ? `      Logged by: ${entry.loggedBy}` : null,
           `      Items:\n${itemLines}`,
+          entry.discountTotal ? `      Discount: -$${parseFloat(entry.discountTotal).toFixed(2)}` : null,
           `      Total: ${entry.total}`
         ].filter(Boolean).join('\n');
       }).join('\n\n');
