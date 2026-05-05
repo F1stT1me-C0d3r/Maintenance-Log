@@ -1,5 +1,0 @@
-Claude steps for app deployment:
-
-1.) superbase
-2.) Railway is SQL
-3.) Consider heavily about pro accounts

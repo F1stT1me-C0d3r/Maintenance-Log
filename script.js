@@ -32,8 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="number" id="maintenanceCost" name="maintenanceCost" class="cost-input" placeholder="0.00" min="0" step="0.01" required />
                 </div>
             </div>
+            <div id="discountItems"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
-                <button type="button" id="addItemBtn">+ Add Another Item</button>
+                <div style="display:flex; gap:8px;">
+                    <button type="button" id="addItemBtn">+ Add Another Item</button>
+                    <button type="button" id="addDiscountBtn">+ Discount</button>
+                </div>
                 <div class="modal-total">
                     <label>Total Cost:</label>
                     <span id="totalCost">$0.00</span>
@@ -42,6 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <div style="margin-top:8px;">
                 <label>Logged by:</label>
                 <input type="text" id="loggedBy" name="loggedBy" placeholder="Your name" />
+            </div>
+            <div style="margin-top:8px;">
+                <label>Date:</label>
+                <input type="date" id="entryDate" name="entryDate" />
             </div>
             <div class="modal-buttons">
                 <button type="submit">Submit</button>
@@ -62,8 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const updateTotal = () => {
-          const total = Array.from(modal.querySelectorAll('.cost-input'))
+          const itemsTotal = Array.from(modal.querySelectorAll('.cost-input'))
             .reduce((sum, input) => sum + (parseFloat(input.value) || 0), 0);
+          const discountTotal = Array.from(modal.querySelectorAll('.discount-input'))
+            .reduce((sum, input) => sum + (parseFloat(input.value) || 0), 0);
+          const total = Math.max(0, itemsTotal - discountTotal);
           const totalEl = modal.querySelector('#totalCost');
           if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
         };
@@ -91,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loggedBy: (modal.querySelector('#loggedBy') || {}).value?.trim() || '',
             items,
             total: (modal.querySelector('#totalCost') || {}).textContent || '$0.00',
-            date: new Date().toLocaleDateString()
+            date: (() => { const v = modal.querySelector('#entryDate')?.value; return v ? new Date(v + 'T00:00:00').toLocaleDateString() : new Date().toLocaleDateString(); })()
           };
 
           fetch('/api/log', {
@@ -129,7 +140,19 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         }
 
-  
+        modal.querySelector('#addDiscountBtn').addEventListener('click', () => {
+          const container = modal.querySelector('#discountItems');
+          const row = document.createElement('div');
+          row.className = 'discount-row';
+          row.innerHTML = `<label>Discount ($):</label><input type="number" class="discount-input" placeholder="0.00" min="0" step="0.01" />`;
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.textContent = '✕';
+          removeBtn.className = 'remove-item-btn';
+          removeBtn.addEventListener('click', () => { row.remove(); updateTotal(); });
+          row.appendChild(removeBtn);
+          container.appendChild(row);
+        });
 
   let carData = { make: []};
 
@@ -198,12 +221,19 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsList.innerHTML = '<p class="error">Please enter a make, model, year, or plate # to filter.</p>';
             return;
             }            
-            const filteredMakes = carData.make.filter(makeEntry => {
-                return makeEntry.make.toLowerCase() === input ||
-                       makeEntry.models.some(model => model.name.toLowerCase() === input) ||
-                       makeEntry.models.some(model => model.year.toString() === input) ||
-                       makeEntry.models.some(model => model.plate.toLowerCase() === input);
-            });
+            const filteredMakes = carData.make.reduce((acc, makeEntry) => {
+                if (makeEntry.make.toLowerCase() === input) {
+                    acc.push(makeEntry);
+                } else {
+                    const models = makeEntry.models.filter(model =>
+                        model.name.toLowerCase() === input ||
+                        model.year.toString() === input ||
+                        model.plate.toLowerCase() === input
+                    );
+                    if (models.length) acc.push({ ...makeEntry, models });
+                }
+                return acc;
+            }, []);
             displayVehicles(filteredMakes);            
         } catch (error) {
             console.error('Error processing input:', error);
@@ -235,6 +265,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (totalEl) totalEl.textContent = '$0.00';
         const loggedByInput = modal.querySelector('#loggedBy');
         if (loggedByInput) loggedByInput.value = '';
+        modal.querySelector('#discountItems').innerHTML = '';
+        const dateInput = modal.querySelector('#entryDate');
+        if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
         try {
           modal.showModal();
         } catch (err) {
