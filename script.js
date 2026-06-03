@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const filterButton = document.getElementById('filterButton');
-  const clearButton = document.getElementById('clearButton');
   const resultsList = document.getElementById('resultsList');
   const modal = document.createElement('dialog');
 
@@ -214,38 +212,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };    
 
-    filterButton.addEventListener('click', () => {
-        try {
-            const input = document.getElementById('maintenanceMessage').value.trim().toLowerCase();
-            if (!input) {
-            resultsList.innerHTML = '<p class="error">Please enter a make, model, year, or plate # to filter.</p>';
+    document.getElementById('maintenanceMessage').addEventListener('input', (e) => {
+        const query = e.target.value.trim().toLowerCase();
+        if (!query) {
+            displayVehicles();
             return;
-            }            
-            const filteredMakes = carData.make.reduce((acc, makeEntry) => {
-                if (makeEntry.make.toLowerCase() === input) {
-                    acc.push(makeEntry);
-                } else {
-                    const models = makeEntry.models.filter(model =>
-                        model.name.toLowerCase() === input ||
-                        model.year.toString() === input ||
-                        model.plate.toLowerCase() === input
-                    );
-                    if (models.length) acc.push({ ...makeEntry, models });
-                }
-                return acc;
-            }, []);
-            displayVehicles(filteredMakes);            
-        } catch (error) {
-            console.error('Error processing input:', error);
-            resultsList.innerHTML = '<p class="error">An error occurred while processing your request. Please try again.</p>';
-            return;
-         }
-        
-    });
-
-    clearButton.addEventListener('click', () => {
-        document.getElementById('maintenanceMessage').value = '';
-        displayVehicles(); // Display all vehicles when clearing the filter
+        }
+        const filteredMakes = carData.make.reduce((acc, makeEntry) => {
+            if (makeEntry.make.toLowerCase().includes(query)) {
+                acc.push(makeEntry);
+            } else {
+                const models = makeEntry.models.filter(model =>
+                    model.name.toLowerCase().includes(query) ||
+                    model.year.toString().includes(query) ||
+                    model.plate.toLowerCase().includes(query)
+                );
+                if (models.length) acc.push({ ...makeEntry, models });
+            }
+            return acc;
+        }, []);
+        displayVehicles(filteredMakes);
     });
 
     resultsList.addEventListener('click', (e) => {
