@@ -54,9 +54,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         li.dataset.index = i;
         li.innerHTML = `
           <input type="checkbox" class="entry-checkbox" data-index="${i}" />
-          <img src="${entry.imageUrl || ''}" class="vehicle-image" />
-          <strong>${entry.make} ${entry.model} (${entry.year}) — Plate # ${entry.plate}</strong>
-          <span class="entry-date">${entry.date}</span>
+          <div class="vehicle-card">
+            <img src="${entry.imageUrl || ''}" class="vehicle-image" />
+            <div class="vehicle-info-row">
+              <strong>${entry.make} ${entry.model} (${entry.year}) — Plate # ${entry.plate}</strong>
+              <span class="entry-date">${entry.date}</span>
+            </div>
+          </div>
           ${entry.loggedBy ? `<span class="entry-logged-by">Logged by: ${entry.loggedBy}</span>` : ''}
           <ul class="entry-items">
             ${entry.items.map(item => `<li>${item.type} — $${item.cost.toFixed(2)}</li>`).join('')}
