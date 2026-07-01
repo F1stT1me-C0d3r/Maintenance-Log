@@ -29,7 +29,12 @@
         <button id="downloadBtn">Download as TXT</button>
       </div>
     </div>
-    <input type="text" id="entrySearch" placeholder="Filter by make, model, year, or plate..." />
+    <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+      <input type="text" id="entrySearch" placeholder="Filter by make, model, year, or plate..." style="margin-bottom:0;" />
+      <select id="monthFilter">
+        <option value="">All months</option>
+      </select>
+    </div>
     <ul id="entriesList"><li class="loading">Loading...</li></ul>
   </section>
 </body>
