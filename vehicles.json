@@ -55,6 +55,12 @@
                             "imageUrl": "vehicle_images/Screenshot_20260429_170705_Turo.jpg"
                         },
                         {
+                            "name": "Carnival",
+                            "year": 2026,
+                            "plateNumber": "E545704",
+                            "imageUrl": "vehicle_images/Screenshot_20260630_210246_Turo.jpg"
+                        },
+                        {
                             "name": "Sportage",
                             "year": 2020,
                             "plateNumber": "V8G471",
@@ -97,6 +103,18 @@
                             "imageUrl": "vehicle_images/Screenshot_20260429_162908_Turo.jpg"
                         },
                         {
+                            "name": "Sportage",
+                            "year": 2026,
+                            "plateNumber": "E545725",
+                            "imageUrl": "vehicle_images/Screenshot_20260630_210417_Turo.jpg"
+                        },
+                        {
+                            "name": "Sportage",
+                            "year": 2026,
+                            "plateNumber": "E505581",
+                            "imageUrl": "vehicle_images/Screenshot_20260630_210352_Turo.jpg"
+                        },
+                        {
                             "name": "Forte",
                             "year": 2022,
                             "plateNumber": "L6M500",
@@ -131,6 +149,12 @@
                             "year": 2025,
                             "plateNumber": "W8Y846",
                             "imageUrl": "vehicle_images/Screenshot_20260429_162607_Turo.jpg"
+                        },
+                        {
+                            "name": "K4",
+                            "year": 2025,
+                            "plateNumber": "E545726",
+                            "imageUrl": "vehicle_images/Screenshot_20260630_210327_Turo.jpg"
                         }
                     ]
                 }
