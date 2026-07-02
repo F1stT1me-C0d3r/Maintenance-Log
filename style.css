@@ -171,6 +171,12 @@ p.error {
     z-index: 2;
     transition: background 0.3s ease;
 }
+.navbar.navbar-with-actions {
+    float: none;
+    width: auto;
+    height: auto;
+    justify-content: space-between;
+}
 .navbar ul {
     list-style-type: none;
     margin: 0;
